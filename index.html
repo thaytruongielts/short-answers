@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập tiếng Anh vào 10 - Short Answers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .question-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .answer-input {
+            width: 70%;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .check-btn {
+            padding: 8px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .check-btn:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .summary {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            border: 2px dashed #4CAF50;
+            border-radius: 8px;
+        }
+        #scoreDisplay {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ôn tập tiếng Anh vào 10 - Short Answers</h1>
+    <p>Hãy trả lời các câu hỏi dưới đây. Sau khi trả lời xong mỗi câu, nhấn "Kiểm tra".</p>
+
+    <div id="quiz-container">
+        </div>
+
+    <div class="summary" id="summary-section" style="display:none;">
+        <h2>Kết quả cuối cùng</h2>
+        <p>Bạn đã hoàn thành 10 câu hỏi.</p>
+        <div id="scoreDisplay"></div>
+    </div>
+</div>
+
+<script>
+    // Định nghĩa các câu hỏi và đáp án đúng
+    const quizData = [
+        {
+            question: "What is the past tense of 'go'?",
+            answer: "went"
+        },
+        {
+            question: "What is the comparative form of 'good'?",
+            answer: "better"
+        },
+        {
+            question: "Where do you often see the Statue of Liberty?",
+            answer: "New York"
+        },
+        {
+            question: "Fill in the blank: She has been living in this city ____ 2010.",
+            answer: "since"
+        },
+        {
+            question: "What is the opposite of 'noisy'?",
+            answer: "quiet"
+        },
+        {
+            question: "The Eiffel Tower is in which city?",
+            answer: "Paris"
+        },
+        {
+            question: "Change the verb to 'V-ing' form: 'swim'",
+            answer: "swimming"
+        },
+        {
+            question: "Complete the idiom: 'As cool as a ...'",
+            answer: "cucumber"
+        },
+        {
+            question: "What is the first month of the year?",
+            answer: "January"
+        },
+        {
+            question: "What does 'DIY' stand for?",
+            answer: "Do it yourself"
+        }
+    ];
+
+    const quizContainer = document.getElementById('quiz-container');
+    const summarySection = document.getElementById('summary-section');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    let correctAnswersCount = 0;
+    let questionsAnswered = 0;
+
+    // Hàm tạo và hiển thị câu hỏi
+    function createQuestionElement(data, index) {
+        const questionBox = document.createElement('div');
+        questionBox.className = 'question-box';
+        questionBox.innerHTML = `
+            <div class="question-text">Câu ${index + 1}: ${data.question}</div>
+            <input type="text" id="answer-${index}" class="answer-input" placeholder="Nhập câu trả lời">
+            <button class="check-btn" onclick="checkAnswer(${index})">Kiểm tra</button>
+            <div id="result-${index}" class="result"></div>
+        `;
+        quizContainer.appendChild(questionBox);
+    }
+
+    // Lặp qua mảng quizData để tạo từng câu hỏi
+    quizData.forEach((question, index) => {
+        createQuestionElement(question, index);
+    });
+
+    // Hàm kiểm tra câu trả lời
+    function checkAnswer(index) {
+        if (questionsAnswered >= quizData.length) {
+            return; // Ngăn không cho kiểm tra lại khi đã đủ 10 câu
+        }
+
+        const inputElement = document.getElementById(`answer-${index}`);
+        const resultElement = document.getElementById(`result-${index}`);
+        const userAnswer = inputElement.value.trim().toLowerCase();
+        const correctAnswer = quizData[index].answer.toLowerCase();
+        const checkBtn = inputElement.nextElementSibling; // Lấy button liền sau input
+
+        if (userAnswer === correctAnswer) {
+            resultElement.textContent = "Chính xác! ✅";
+            resultElement.className = "result correct";
+            correctAnswersCount++;
+        } else {
+            resultElement.textContent = `Sai rồi. Đáp án đúng là: "${quizData[index].answer}" ❌`;
+            resultElement.className = "result incorrect";
+        }
+
+        // Vô hiệu hóa ô nhập và nút "Kiểm tra" sau khi đã trả lời
+        inputElement.disabled = true;
+        checkBtn.disabled = true;
+        questionsAnswered++;
+
+        // Kiểm tra nếu đã trả lời đủ 10 câu
+        if (questionsAnswered === quizData.length) {
+            showSummary();
+        }
+    }
+
+    // Hàm hiển thị tổng kết
+    function showSummary() {
+        quizContainer.style.display = 'none'; // Ẩn phần câu hỏi
+        summarySection.style.display = 'block'; // Hiển thị phần tổng kết
+        scoreDisplay.textContent = `${correctAnswersCount} / ${quizData.length}`;
+    }
+</script>
+
+</body>
+</html>
